@@ -7,6 +7,8 @@ import {
   CircleDot,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { toast } from "sonner";
+import { useNavigate } from "react-router-dom";
 
 const courts = [
   { name: "Kort 1 (Ziemny)", color: "bg-gradient-clay" },
@@ -45,6 +47,7 @@ const typeStyles: Record<Booking["type"], string> = {
 };
 
 export const ReceptionistDashboard = () => {
+  const navigate = useNavigate();
   return (
     <div className="space-y-6">
       <section>
@@ -69,6 +72,7 @@ export const ReceptionistDashboard = () => {
           title="3 nowe zapisy turniejowe"
           desc="Turniej Open — wymagają zatwierdzenia"
           cta="Zobacz zapisy"
+          onClick={() => navigate("/turnieje")}
         />
         <Alert
           tone="destructive"
@@ -76,6 +80,7 @@ export const ReceptionistDashboard = () => {
           title="2 nieopłacone rezerwacje"
           desc="Łącznie 380 zł zaległości"
           cta="Wyślij przypomnienie"
+          onClick={() => toast.success("Przypomnienia wysłane do 2 klientów")}
         />
         <Alert
           tone="primary"
@@ -83,6 +88,7 @@ export const ReceptionistDashboard = () => {
           title="Turniej startuje za 2 dni"
           desc="32 uczestników, drabinka gotowa"
           cta="Otwórz drabinkę"
+          onClick={() => navigate("/turnieje")}
         />
       </section>
 
@@ -152,8 +158,9 @@ export const ReceptionistDashboard = () => {
                         const left = (b.start / hours.length) * 100;
                         const width = ((b.end - b.start) / hours.length) * 100;
                         return (
-                          <div
+                          <button
                             key={i}
+                            onClick={() => toast(b.client, { description: `Kort ${b.court + 1} · ${hours[b.start]} - ${hours[b.end]}` })}
                             className={cn(
                               "absolute top-1 bottom-1 rounded-md px-2 text-[11px] font-semibold flex items-center cursor-pointer hover:scale-[1.02] hover:z-10 transition-all shadow-sm",
                               typeStyles[b.type],
@@ -161,7 +168,7 @@ export const ReceptionistDashboard = () => {
                             style={{ left: `${left}%`, width: `calc(${width}% - 4px)` }}
                           >
                             <span className="truncate">{b.client}</span>
-                          </div>
+                          </button>
                         );
                       })}
                   </div>
@@ -176,11 +183,11 @@ export const ReceptionistDashboard = () => {
 };
 
 const Alert = ({
-  tone, icon: Icon, title, desc, cta,
+  tone, icon: Icon, title, desc, cta, onClick,
 }: {
   tone: "warning" | "destructive" | "primary";
   icon: React.ComponentType<{ className?: string }>;
-  title: string; desc: string; cta: string;
+  title: string; desc: string; cta: string; onClick?: () => void;
 }) => {
   const tones: Record<string, string> = {
     warning: "from-warning/15 to-warning/5 border-warning/30",
@@ -200,7 +207,7 @@ const Alert = ({
       <div className="flex-1 min-w-0">
         <div className="font-semibold">{title}</div>
         <div className="text-xs text-muted-foreground mb-2">{desc}</div>
-        <button className="text-xs font-semibold text-foreground hover:underline">{cta} →</button>
+        <button onClick={onClick} className="text-xs font-semibold text-foreground hover:underline">{cta} →</button>
       </div>
     </div>
   );
