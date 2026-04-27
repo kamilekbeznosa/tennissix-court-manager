@@ -1,4 +1,4 @@
-import { NavLink, useLocation } from "react-router-dom";
+import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import {
   LayoutDashboard,
   CalendarDays,
@@ -9,6 +9,7 @@ import {
   Activity,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { toast } from "sonner";
 
 const navItems = [
   { to: "/", label: "Dashboard", icon: LayoutDashboard, end: true },
@@ -21,6 +22,7 @@ const navItems = [
 
 export const Sidebar = () => {
   const location = useLocation();
+  const navigate = useNavigate();
   return (
     <aside className="hidden lg:flex w-64 shrink-0 flex-col bg-sidebar text-sidebar-foreground border-r border-sidebar-border">
       <div className="flex items-center gap-3 px-6 h-20 border-b border-sidebar-border">
@@ -77,7 +79,10 @@ export const Sidebar = () => {
         <p className="text-xs text-sidebar-foreground/70 mb-3">
           14 dni do końca. Przedłuż teraz i zyskaj 15% rabatu.
         </p>
-        <button className="w-full text-xs font-semibold rounded-md bg-primary text-primary-foreground py-2 hover:bg-primary/90 transition">
+        <button
+          onClick={() => { navigate("/cennik"); toast.success("Sprawdź dostępne pakiety"); }}
+          className="w-full text-xs font-semibold rounded-md bg-primary text-primary-foreground py-2 hover:bg-primary/90 transition"
+        >
           Przedłuż karnet
         </button>
       </div>
