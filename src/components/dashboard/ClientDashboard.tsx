@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { BookingWizard } from "@/components/booking/BookingWizard";
+import { ServiceRequestDialog } from "@/components/service/ServiceRequestDialog";
 import {
   CircleDot,
   Wrench,
@@ -16,6 +17,8 @@ import {
   Target,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 
 const upcoming = [
   { day: "Wt", date: 28, time: "18:00", title: "Lekcja z trenerem", coach: "Tomasz K.", court: "Kort 2", color: "bg-gradient-court", tag: "Lekcja" },
@@ -38,6 +41,9 @@ const events: Record<number, { color: string; count: number }> = {
 
 export const ClientDashboard = () => {
   const [bookingOpen, setBookingOpen] = useState(false);
+  const [serviceOpen, setServiceOpen] = useState(false);
+  const [calendarView, setCalendarView] = useState<"week" | "month">("month");
+  const navigate = useNavigate();
 
   return (
     <div className="space-y-6">
