@@ -74,7 +74,10 @@ export const ClientDashboard = () => {
             <div className="h-1.5 rounded-full bg-white/10 overflow-hidden mb-3">
               <div className="h-full bg-gradient-primary w-[47%]" />
             </div>
-            <button className="text-xs text-primary font-semibold inline-flex items-center gap-1 hover:gap-2 transition-all">
+            <button
+              onClick={() => navigate("/cennik")}
+              className="text-xs text-primary font-semibold inline-flex items-center gap-1 hover:gap-2 transition-all"
+            >
               Przedłuż karnet <ChevronRight className="h-3 w-3" />
             </button>
           </div>
@@ -99,8 +102,8 @@ export const ClientDashboard = () => {
               <p className="text-sm text-muted-foreground">Październik 2025</p>
             </div>
             <div className="flex items-center gap-2">
-              <Button variant="ghost" size="sm">Tydzień</Button>
-              <Button variant="secondary" size="sm">Miesiąc</Button>
+              <Button variant={calendarView === "week" ? "secondary" : "ghost"} size="sm" onClick={() => setCalendarView("week")}>Tydzień</Button>
+              <Button variant={calendarView === "month" ? "secondary" : "ghost"} size="sm" onClick={() => setCalendarView("month")}>Miesiąc</Button>
             </div>
           </div>
 
@@ -117,6 +120,10 @@ export const ClientDashboard = () => {
               return (
                 <button
                   key={day}
+                  onClick={() => {
+                    if (ev) toast(`Dzień ${day} października`, { description: `${ev.count} wydarzenie(a) zaplanowane` });
+                    else setBookingOpen(true);
+                  }}
                   className={cn(
                     "aspect-square rounded-lg border text-sm font-medium relative flex flex-col items-center justify-center transition-all hover:border-primary/40",
                     isToday ? "border-primary bg-primary/5 shadow-soft text-foreground" : "border-border bg-card text-muted-foreground hover:text-foreground",
@@ -162,7 +169,10 @@ export const ClientDashboard = () => {
             </div>
           </button>
 
-          <button className="group w-full text-left rounded-2xl bg-card border border-border p-6 hover:border-accent/50 hover:shadow-soft transition-all">
+          <button
+            onClick={() => setServiceOpen(true)}
+            className="group w-full text-left rounded-2xl bg-card border border-border p-6 hover:border-accent/50 hover:shadow-soft transition-all"
+          >
             <div className="h-12 w-12 rounded-xl bg-gradient-clay text-accent-foreground flex items-center justify-center mb-4">
               <Wrench className="h-6 w-6" />
             </div>
@@ -182,7 +192,7 @@ export const ClientDashboard = () => {
             <h2 className="font-display text-xl font-bold">Nadchodzące wydarzenia</h2>
             <p className="text-sm text-muted-foreground">Kolejne 7 dni</p>
           </div>
-          <Button variant="ghost" size="sm">
+          <Button variant="ghost" size="sm" onClick={() => navigate("/rezerwacje")}>
             Zobacz wszystkie <ChevronRight className="h-4 w-4" />
           </Button>
         </div>
@@ -191,6 +201,7 @@ export const ClientDashboard = () => {
           {upcoming.map((u, i) => (
             <div
               key={i}
+              onClick={() => toast(u.title, { description: `${u.court} · ${u.time} · ${u.coach}` })}
               className="group flex items-center gap-4 p-4 rounded-xl border border-border bg-card hover:border-primary/40 hover:shadow-soft transition-all cursor-pointer"
             >
               <div className={cn("h-14 w-14 rounded-xl text-white flex flex-col items-center justify-center shrink-0 shadow-soft", u.color)}>
@@ -222,6 +233,7 @@ export const ClientDashboard = () => {
       </section>
 
       <BookingWizard open={bookingOpen} onOpenChange={setBookingOpen} />
+      <ServiceRequestDialog open={serviceOpen} onOpenChange={setServiceOpen} />
     </div>
   );
 };
