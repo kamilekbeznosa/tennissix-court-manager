@@ -17,6 +17,8 @@ import {
   Sparkles,
   CreditCard,
 } from "lucide-react";
+import { toast } from "sonner";
+import { useNotifications } from "@/contexts/NotificationsContext";
 
 interface Props {
   open: boolean;
@@ -46,6 +48,7 @@ export const BookingWizard = ({ open, onOpenChange }: Props) => {
   const [racket, setRacket] = useState(false);
   const [balls, setBalls] = useState(false);
   const [coach, setCoach] = useState(false);
+  const { push } = useNotifications();
 
   const selectedCourt = courts.find((c) => c.id === court);
 
@@ -286,7 +289,21 @@ export const BookingWizard = ({ open, onOpenChange }: Props) => {
               Dalej <ChevronRight className="h-4 w-4" />
             </Button>
           ) : (
-            <Button variant="hero" size="lg" onClick={() => close(false)}>
+            <Button
+              variant="hero"
+              size="lg"
+              onClick={() => {
+                toast.success("Rezerwacja potwierdzona!", {
+                  description: `${selectedCourt?.name} · ${time} · ${total} zł`,
+                });
+                push({
+                  title: "Rezerwacja potwierdzona",
+                  desc: `${selectedCourt?.name} · ${time}`,
+                  tone: "success",
+                });
+                close(false);
+              }}
+            >
               <CreditCard className="h-4 w-4" /> Zapłać {total} zł
             </Button>
           )}
