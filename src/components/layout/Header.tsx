@@ -15,9 +15,11 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { NotificationsPopover } from "./NotificationsPopover";
 import { SettingsDialog } from "./SettingsDialog";
+import { useAuth } from "@/contexts/AuthContext";
 
 export const Header = () => {
   const { role, setRole } = useRole();
+  const { user, logout } = useAuth();
   const navigate = useNavigate();
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [query, setQuery] = useState("");
@@ -70,14 +72,14 @@ export const Header = () => {
           <button className="flex items-center gap-3 pl-3 border-l border-border rounded-r-md hover:bg-secondary/50 transition pr-1 py-1">
             <div className="hidden sm:block text-right">
               <div className="text-sm font-semibold leading-tight">
-                {role === "client" ? "Aleksandra Nowak" : "Marek Wiśniewski"}
+                {user?.name || (role === "client" ? "Aleksandra Nowak" : "Marek Wiśniewski")}
               </div>
               <div className="text-xs text-muted-foreground">
                 {role === "client" ? "Karnet VIP" : "Recepcjonista"}
               </div>
             </div>
             <div className="relative h-10 w-10 rounded-full bg-gradient-primary flex items-center justify-center font-bold text-primary-foreground shadow-soft">
-              {role === "client" ? "AN" : "MW"}
+              {(user?.name || (role === "client" ? "AN" : "MW")).split(" ").map(n => n[0]).slice(0,2).join("")}
               <span className="absolute -bottom-0.5 -right-0.5 h-3 w-3 rounded-full bg-success border-2 border-card" />
             </div>
             <ChevronDown className="h-4 w-4 text-muted-foreground hidden sm:block" />
@@ -85,8 +87,8 @@ export const Header = () => {
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="w-56">
           <DropdownMenuLabel>
-            <div className="font-semibold">{role === "client" ? "Aleksandra Nowak" : "Marek Wiśniewski"}</div>
-            <div className="text-xs text-muted-foreground font-normal">aleksandra@tennisix.pl</div>
+            <div className="font-semibold">{user?.name || (role === "client" ? "Aleksandra Nowak" : "Marek Wiśniewski")}</div>
+            <div className="text-xs text-muted-foreground font-normal">{user?.email || "aleksandra@tennisix.pl"}</div>
           </DropdownMenuLabel>
           <DropdownMenuSeparator />
           <DropdownMenuItem onClick={() => navigate("/profil")}>
@@ -104,7 +106,11 @@ export const Header = () => {
           <DropdownMenuSeparator />
           <DropdownMenuItem
             className="text-destructive focus:text-destructive"
-            onClick={() => toast.success("Wylogowano pomyślnie")}
+            onClick={() => {
+              logout();
+              toast.success("Wylogowano pomyślnie");
+              navigate("/login");
+            }}
           >
             <LogOut className="h-4 w-4" /> Wyloguj
           </DropdownMenuItem>
