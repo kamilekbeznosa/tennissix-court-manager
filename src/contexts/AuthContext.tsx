@@ -7,13 +7,22 @@ interface AuthUser {
   name: string;
 }
 
+interface SignupData {
+  name: string;
+  email: string;
+  password: string;
+  role: Role;
+  phone?: string;
+}
+
 interface AuthCtx {
   user: AuthUser | null;
   login: (email: string, password: string, role: Role) => Promise<void>;
+  signup: (data: SignupData) => Promise<void>;
   logout: () => void;
 }
 
-const Ctx = createContext<AuthCtx>({ user: null, login: async () => {}, logout: () => {} });
+const Ctx = createContext<AuthCtx>({ user: null, login: async () => {}, signup: async () => {}, logout: () => {} });
 const STORAGE_KEY = "tennisix_auth";
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
