@@ -216,12 +216,9 @@ const Login = () => {
 
           <div className="text-center text-sm text-muted-foreground">
             Nie masz konta?{" "}
-            <button
-              onClick={() => toast("Skontaktuj się z recepcją, aby założyć konto")}
-              className="text-primary font-semibold hover:underline"
-            >
+            <Link to="/rejestracja" className="text-primary font-semibold hover:underline">
               Dołącz do klubu
-            </button>
+            </Link>
           </div>
         </div>
       </div>
