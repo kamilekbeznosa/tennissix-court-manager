@@ -50,12 +50,22 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     setRole(role);
   };
 
+  const signup = async (data: SignupData) => {
+    if (!data.name || !data.email || !data.password) throw new Error("Wypełnij wszystkie wymagane pola");
+    if (data.password.length < 6) throw new Error("Hasło musi mieć min. 6 znaków");
+    if (!/^\S+@\S+\.\S+$/.test(data.email)) throw new Error("Nieprawidłowy adres e-mail");
+    const u: AuthUser = { email: data.email, role: data.role, name: data.name };
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(u));
+    setUser(u);
+    setRole(data.role);
+  };
+
   const logout = () => {
     localStorage.removeItem(STORAGE_KEY);
     setUser(null);
   };
 
-  return <Ctx.Provider value={{ user, login, logout }}>{children}</Ctx.Provider>;
+  return <Ctx.Provider value={{ user, login, signup, logout }}>{children}</Ctx.Provider>;
 };
 
 export const useAuth = () => useContext(Ctx);
