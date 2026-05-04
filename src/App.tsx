@@ -11,6 +11,7 @@ import Service from "./pages/Service.tsx";
 import Pricing from "./pages/Pricing.tsx";
 import Profile from "./pages/Profile.tsx";
 import Login from "./pages/Login.tsx";
+import Register from "./pages/Register.tsx";
 import { RoleProvider } from "./contexts/RoleContext";
 import { NotificationsProvider } from "./contexts/NotificationsContext";
 import { SettingsProvider } from "./contexts/SettingsContext";
