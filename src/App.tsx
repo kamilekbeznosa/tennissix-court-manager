@@ -10,9 +10,12 @@ import Tournaments from "./pages/Tournaments.tsx";
 import Service from "./pages/Service.tsx";
 import Pricing from "./pages/Pricing.tsx";
 import Profile from "./pages/Profile.tsx";
+import Login from "./pages/Login.tsx";
 import { RoleProvider } from "./contexts/RoleContext";
 import { NotificationsProvider } from "./contexts/NotificationsContext";
 import { SettingsProvider } from "./contexts/SettingsContext";
+import { AuthProvider } from "./contexts/AuthContext";
+import { ProtectedRoute } from "./components/auth/ProtectedRoute";
 
 const queryClient = new QueryClient();
 
@@ -25,16 +28,19 @@ const App = () => (
         <NotificationsProvider>
           <RoleProvider>
             <BrowserRouter>
-              <Routes>
-                <Route path="/" element={<Index />} />
-                <Route path="/rezerwacje" element={<Reservations />} />
-                <Route path="/turnieje" element={<Tournaments />} />
-                <Route path="/serwis" element={<Service />} />
-                <Route path="/cennik" element={<Pricing />} />
-                <Route path="/profil" element={<Profile />} />
-                {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-                <Route path="*" element={<NotFound />} />
-              </Routes>
+              <AuthProvider>
+                <Routes>
+                  <Route path="/login" element={<Login />} />
+                  <Route path="/" element={<ProtectedRoute><Index /></ProtectedRoute>} />
+                  <Route path="/rezerwacje" element={<ProtectedRoute><Reservations /></ProtectedRoute>} />
+                  <Route path="/turnieje" element={<ProtectedRoute><Tournaments /></ProtectedRoute>} />
+                  <Route path="/serwis" element={<ProtectedRoute><Service /></ProtectedRoute>} />
+                  <Route path="/cennik" element={<ProtectedRoute><Pricing /></ProtectedRoute>} />
+                  <Route path="/profil" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
+                  {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+                  <Route path="*" element={<NotFound />} />
+                </Routes>
+              </AuthProvider>
             </BrowserRouter>
           </RoleProvider>
         </NotificationsProvider>
