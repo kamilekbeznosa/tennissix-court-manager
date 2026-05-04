@@ -32,6 +32,7 @@ const App = () => (
               <AuthProvider>
                 <Routes>
                   <Route path="/login" element={<Login />} />
+                  <Route path="/rejestracja" element={<Register />} />
                   <Route path="/" element={<ProtectedRoute><Index /></ProtectedRoute>} />
                   <Route path="/rezerwacje" element={<ProtectedRoute><Reservations /></ProtectedRoute>} />
                   <Route path="/turnieje" element={<ProtectedRoute><Tournaments /></ProtectedRoute>} />
